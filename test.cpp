@@ -94,18 +94,11 @@ int main() {
 	float vertices[] = {
 		-0.5f, -0.5f, 0.0f, //bottom left
 		 0.5f, -0.5f, 0.0f, //bottom right
-		 0.5f,  0.5f, 0.0f, //top right
-		-0.5f,  0.5f, 0.0f  //top left
-	};
-	//indexing to make a square of two triangles
-	unsigned int indices[] = {
-		0, 1, 3, //first triangle
-		1, 2, 3  //second triangle
+		 0.0f,  0.5f, 0.0f  //top right
 	};
 
-	unsigned int VBO, EBO, VAO;
+	unsigned int VBO, VAO;
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
 
 	//bind VAO
@@ -113,9 +106,6 @@ int main() {
 	//copy the vertices array into a buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	//copy our index array in an element buffer for OpenGL to use
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	//set the vertex attributes to pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -148,7 +138,7 @@ int main() {
 		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
 		glBindVertexArray(VAO); //bind the VAO
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //draw the triangles
+		glDrawArrays(GL_TRIANGLES, 0, 3); //draw the triangle
 		glBindVertexArray(0);
 
 		//check and call events, then swap the buffers
@@ -159,7 +149,6 @@ int main() {
 	//de-allocate the resources
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
 
 	glfwTerminate();
 	return 0;
