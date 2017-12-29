@@ -94,14 +94,17 @@ int main() {
 		 0.0f,  0.5f, 0.0f
 	};
 
-	unsigned int VBO;
+	unsigned int VBO, VAO;
 	glGenBuffers(1, &VBO);
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
 
+	//copy the vertices array into a buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-
+	//set the vertex attributes to pointers
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
 	//tell OpenGL the size of the rendering window - sets location and size of window
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -115,13 +118,22 @@ int main() {
 		processInput(window);
 
 		//rendering commands here
-		glClearColor(0.7f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		//draw the triangle
+		glUseProgram(shaderProgram); //use our shader when we want to render an object
+		glBindVertexArray(VAO); //bind the VAO
+		glDrawArrays(GL_TRIANGLES, 0, 3); //draw the triangle
 
 		//check and call events, then swap the buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	//de-allocate the resources
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
 
 	glfwTerminate();
 	return 0;
