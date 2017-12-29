@@ -89,19 +89,30 @@ int main() {
 
 	//vertex data
 	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
+		-0.5f, -0.5f, 0.0f, //bottom left
+		 0.5f, -0.5f, 0.0f, //bottom right
+		 0.5f,  0.5f, 0.0f, //top right
+		-0.5f,  0.5f, 0.0f  //top left
+	};
+	//indexing to make a square of two triangles
+	unsigned int indices[] = {
+		0, 1, 3, //first triangle
+		1, 2, 3  //second triangle
 	};
 
-	unsigned int VBO, VAO;
+	unsigned int VBO, EBO, VAO;
 	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
 
+	//bind VAO
+	glBindVertexArray(VAO);
 	//copy the vertices array into a buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//copy our index array in an element buffer for OpenGL to use
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	//set the vertex attributes to pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -111,6 +122,9 @@ int main() {
 
 	//resize the screen if changed
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	//comment out to draw the polygons as filled rather than wireframe
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	//render loop
 	while(!glfwWindowShouldClose(window)){
@@ -124,7 +138,8 @@ int main() {
 		//draw the triangle
 		glUseProgram(shaderProgram); //use our shader when we want to render an object
 		glBindVertexArray(VAO); //bind the VAO
-		glDrawArrays(GL_TRIANGLES, 0, 3); //draw the triangle
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //draw the triangles
+		glBindVertexArray(0);
 
 		//check and call events, then swap the buffers
 		glfwSwapBuffers(window);
@@ -134,6 +149,7 @@ int main() {
 	//de-allocate the resources
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 
 	glfwTerminate();
 	return 0;
