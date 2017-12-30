@@ -1,5 +1,5 @@
 #include <glad\glad.h>
-#include <GLFW/glfw3.h>
+#include <GLFW\glfw3.h>
 
 #include <iostream>
 
@@ -33,7 +33,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	
+
 	//create and verify GLFW window
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
 	if (window == NULL) {
@@ -58,7 +58,7 @@ int main() {
 	int success;
 	char infoLog[512];
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	
+
 	if (!success) {
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
@@ -93,10 +93,10 @@ int main() {
 
 	//vertex data
 	float vertices[] = {
-		 //positions          //colors
+		//positions          //colors
 		-0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, //bottom left
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, //bottom right
-		 0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f  //top right
+		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, //bottom right
+		0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f  //top right
 	};
 
 	unsigned int VBO, VAO;
@@ -125,7 +125,7 @@ int main() {
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	//render loop
-	while(!glfwWindowShouldClose(window)){
+	while (!glfwWindowShouldClose(window)) {
 		//input
 		processInput(window);
 
